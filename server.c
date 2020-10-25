@@ -84,8 +84,26 @@ void* communication(void *arg) {
         printf("command:%s\n", buffer);
         parse_command(buffer, cmd);
         if (strcmp(cmd->command, "USER") == 0) {
-            ftp_user(cmd, connfd);
+            ftp_user(cmd, connfd, &username_ok);
         }
+        else if (strcmp(cmd->command, "PASS") == 0)
+        {
+            if (username_ok == 0) {
+                char *non_user = "503 None USER.\r\n";
+                m_write(connfd, non_user, strlen(non_user));
+            }
+            else {
+                ftp_pass(cmd, connfd, &logged_in);
+            }
+        }
+        else if (logged_in != 1) {
+                char *not_logged_in = "530 Not logged in.\r\n";
+                m_write(connfd, not_logged_in, strlen(not_logged_in));
+        }
+
+        
+
+        
         memset(buffer, 0, 1024);
         memset(cmd, 0, sizeof(Command));
     }
