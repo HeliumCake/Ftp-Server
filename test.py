@@ -84,7 +84,7 @@ data=client.recv(1002400)
 print(data)
 
 datafd=socket.socket()
-msg="LIST\r\n"
+msg="LIST test\r\n"
 client.send(msg)
 data=client.recv(1002400)
 print(data)
