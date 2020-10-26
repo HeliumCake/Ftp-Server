@@ -200,7 +200,7 @@ void ftp_cwd(Command *cmd, int connfd, char *dir)
 			else if (cmd->arg[2] == '/' || cmd->arg[2] == '\0')
 			{
 				dir[pos] = '\0';
-				strcat(dir, cmd->arg[1] + 2);
+				strcat(dir, cmd->arg + 2);
 			}
 			else
 			{
