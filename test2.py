@@ -81,7 +81,7 @@ def test(port=21, directory='/tmp'):
 # Test 1
 # Test 2
 port = 1235
-directory = "/tmp/test"
+directory = "/tmp"
 test(port, directory)
 shutil.rmtree(directory)
 # Clean
