@@ -29,13 +29,20 @@ void ftp_retr(Command *cmd, int connfd) {}
 void ftp_stor(Command *cmd, int connfd) {}
 void ftp_quit(Command *cmd, int connfd, int *state)
 {
-	char *reply = "221 Quit successfully.\r\n";
+	char *reply = "221 QUIT successfully.\r\n";
 	*state = 1;
 	m_write(connfd, reply, strlen(reply));
 }
 void ftp_syst(Command *cmd, int connfd) {}
 void ftp_type(Command *cmd, int connfd) {}
-void ftp_port(Command *cmd, int connfd, char *data_ip, int *data_port) {}
+void ftp_port(Command *cmd, int connfd, char *data_ip, int *data_port) {
+	int h1,h2,h3,h4,p1,p2;
+	sscanf(cmd->arg, "%d,%d,%d,%d,%d,%d", &h1,&h2,&h3,&h4,&p1,&p2);
+	sprintf(data_port, "%d.%d.%d.%d",h1,h2,h3,h4);
+	*data_port = p1*256+p2;
+	char *reply = "200 PORT successfully.\r\n";
+	m_write(connfd, reply, strlen(reply));
+}
 void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 {
 	srand((unsigned)time(NULL));
@@ -54,7 +61,7 @@ void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 	sscanf(ip, "%d.%d.%d.%d", &h1, &h2, &h3, &h4);
 	p2 = port % 256;
 	p1 = port / 256;
-	sprintf(reply, "227 (%d,%d,%d,%d,%d,%d)\r\n", h1, h2, h3, h4, p1, p2);
+	sprintf(reply, "227 Entering Passive Mode (%d,%d,%d,%d,%d,%d)\r\n", h1, h2, h3, h4, p1, p2);
 	m_write(connfd, reply, strlen(reply));
 }
 void ftp_mkd(Command *cmd, int connfd) {}

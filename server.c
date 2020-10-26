@@ -90,12 +90,12 @@ void *communication(void *arg)
     int logged_in = 0;
     int rnfr_tag = 0;
     int quit_tag = 0;
-    char data_ip[16];
+    char data_ip[20];
     int data_port;
     int data_socket = -1;
     Command *cmd = (Command *)malloc(sizeof(Command));
 
-    char *ready = "220 FTP server ready.\r\n";
+    char *ready = "220 Anonymous FTP server ready.\r\n";
     m_write(connfd, ready, strlen(ready));
     while (read(connfd, buffer, 1024) > 0)
     {
@@ -161,11 +161,21 @@ void *communication(void *arg)
             else if (strcmp(cmd->command, "PORT") == 0)
             {
                 rnfr_tag = 0;
+                if (data_socket != -1)
+                {
+                    close(data_socket);
+                    data_socket = -1;
+                }
                 ftp_port(cmd, connfd, data_ip, &data_port);
             }
             else if (strcmp(cmd->command, "PASV") == 0)
             {
                 rnfr_tag = 0;
+                if (data_socket != -1)
+                {
+                    close(data_socket);
+                    data_socket = -1;
+                }
                 ftp_pasv(cmd, connfd, &data_socket);
             }
             else if (strcmp(cmd->command, "MKD") == 0)
