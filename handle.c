@@ -55,8 +55,11 @@ void ftp_retr(Command *cmd, int connfd, int datafd, char *dir)
 		char *reply = "451 Read file error.\r\n";
 		m_write(connfd, reply, strlen(reply));
 	}
-	char *reply = "226 RETR successfully.\r\n";
-	m_write(connfd, reply, strlen(reply));
+	else
+	{
+		char *reply = "226 RETR successfully.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
 }
 
 void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
