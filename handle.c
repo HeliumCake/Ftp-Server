@@ -244,6 +244,8 @@ void ftp_pwd(Command *cmd, int connfd, char *dir)
 {
 	int i = strlen(root_dir);
 	char pathname[200];
+	printf("pathname:%s\n", pathname);
+	printf("dir:%s\n", dir);
 	strcpy(pathname, dir + i);
 	char reply[220];
 	sprintf(reply, "257 \"%s\"\r\n", pathname);
@@ -303,7 +305,8 @@ void ftp_rmd(Command *cmd, int connfd, char *dir)
 	}
 }
 
-void ftp_rnfr(Command *cmd, int connfd, char *dir, char *oldname) {
+void ftp_rnfr(Command *cmd, int connfd, char *dir, char *oldname)
+{
 	char filename[200];
 	strcpy(filename, dir);
 	strcat(filename, "/");
