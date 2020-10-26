@@ -224,6 +224,27 @@ void *communication(void *arg)
             else if (strcmp(cmd->command, "STOR") == 0)
             {
                 rnfr_tag = 0;
+                char *reply = "150 About to open data connection.\r\n";
+                m_write(connfd, reply, strlen(reply));
+                int data_connfd;
+                if (data_socket != -1 && (data_connfd = accept(data_socket, NULL, NULL)) != -1)
+                {
+                    ftp_stor(cmd, connfd, data_connfd, dir);
+                    close(data_connfd);
+                    close(data_socket);
+                    data_socket = -1;
+                }
+                else if (data_port != -1 && (data_connfd = create_connect(data_ip, data_port)) != -1)
+                {
+                    ftp_stor(cmd, connfd, data_connfd, dir);
+                    close(data_connfd);
+                    data_port = -1;
+                }
+                else
+                {
+                    char *reply = "425 Can't open data connection.\r\n";
+                    m_write(connfd, reply, strlen(reply));
+                }
             }
             else if (strcmp(cmd->command, "QUIT") == 0)
             {
