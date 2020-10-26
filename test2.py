@@ -13,22 +13,6 @@ credit = 40
 minor = 3
 major = 8
 
-def build():
-  global credit
-  proc = subprocess.Popen('make', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  while True:
-    stdout = proc.stdout.readline()
-    stderr = proc.stderr.readline()
-    if not (stdout and stderr):
-      break
-    if stdout and '-Wall' not in stdout:
-      print 'No -Wall argument'
-      print 'Your credit is 0'
-      exit(0)
-    if stderr and credit == 40:
-      print 'There are warnings when compiling your program'
-      credit -= major
-
 def create_test_file(filename):
   f = open(filename, 'wb')
   for i in xrange(10000):
@@ -94,7 +78,7 @@ def test(port=21, directory='/tmp'):
 
 # Test 1
 # Test 2
-port = 1234
+port = 1235
 directory = ''.join(random.choice(string.ascii_letters) for x in xrange(10))
 if os.path.isdir(directory):
   shutil.rmtree(directory)
