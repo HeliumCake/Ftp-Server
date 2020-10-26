@@ -55,6 +55,7 @@ def test(port=21, directory='/tmp'):
       credit -= minor
     # SYST
     if ftp.sendcmd('SYST') != '215 UNIX Type: L8':
+      print ftp.sendcmd
       print 'Bad response for SYST'
       credit -= minor
     # TYPE
