@@ -38,10 +38,6 @@ def create_test_file(filename):
 
 def test(port=21, directory='/tmp'):
   global credit
-  if port == 21 and directory == '/tmp':
-    server = subprocess.Popen('./server', stdout=subprocess.PIPE)
-  else:
-    server = subprocess.Popen(['./server', '-port', '%d' % port, '-root', directory], stdout=subprocess.PIPE)
   time.sleep(0.1)
   try:
     ftp = FTP()
@@ -97,11 +93,9 @@ def test(port=21, directory='/tmp'):
     credit = 0
   server.kill()
 
-build()
 # Test 1
-test()
 # Test 2
-port = random.randint(2000, 3000)
+port = 1234
 directory = ''.join(random.choice(string.ascii_letters) for x in xrange(10))
 if os.path.isdir(directory):
   shutil.rmtree(directory)
