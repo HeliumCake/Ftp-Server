@@ -89,6 +89,9 @@ void *communication(void *arg)
     int logged_in = 0;
     int rnfr_tag = 0;
     int quit_tag = 0;
+    char data_ip[16];
+    int data_port;
+    int data_socket;
     Command *cmd = (Command *)malloc(sizeof(Command));
 
     char *ready = "220 FTP server ready.\r\n";
@@ -157,12 +160,12 @@ void *communication(void *arg)
             else if (strcmp(cmd->command, "PORT") == 0)
             {
                 rnfr_tag = 0;
-                ftp_port(cmd, connfd);
+                ftp_port(cmd, connfd, data_ip, &data_port);
             }
             else if (strcmp(cmd->command, "PASV") == 0)
             {
                 rnfr_tag = 0;
-                ftp_pasv(cmd, connfd);
+                ftp_pasv(cmd, connfd, &data_socket);
             }
             else if (strcmp(cmd->command, "MKD") == 0)
             {
@@ -216,47 +219,49 @@ void *communication(void *arg)
     return NULL;
 }
 
+int create_socket(int port) {
+    char *serverIP = "127.0.0.1";
+    int listenfd;
+    struct sockaddr_in addr;
+
+    if ((listenfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
+    {
+        return -1;
+    }
+
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = (in_port_t)htons((uint16_t)port);
+    inet_pton(AF_INET, serverIP, &addr.sin_addr);
+
+    if (bind(listenfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
+    {
+        return -1;
+    }
+
+    if (listen(listenfd, 10) == -1)
+    {
+        return -1;
+    }
+    
+    return listenfd;
+}
+
 int main(int argc, char **argv)
 {
     int port = 6789;
 
     int listenfd, connfd;
-    struct sockaddr_in addr;
-
-    //创建socket
-    if ((listenfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
+    
+    if ((listenfd = create_socket(port)) == -1)
     {
-        printf("Error socket(): %s(%d)\n", strerror(errno), errno);
         return 1;
     }
 
-    //设置本机的ip和port
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = (in_port_t)htons((uint16_t)port);
-    addr.sin_addr.s_addr = htonl(INADDR_ANY); //监听"0.0.0.0"
-
-    //将本机的ip和port与socket绑定
-    if (bind(listenfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
-    {
-        printf("Error bind(): %s(%d)\n", strerror(errno), errno);
-        return 1;
-    }
-
-    //开始监听socket
-    if (listen(listenfd, 10) == -1)
-    {
-        printf("Error listen(): %s(%d)\n", strerror(errno), errno);
-        return 1;
-    }
-
-    //持续监听连接请求
     while (1)
     {
-        //等待client的连接 -- 阻塞函数
         if ((connfd = accept(listenfd, NULL, NULL)) == -1)
         {
-            printf("Error accept(): %s(%d)\n", strerror(errno), errno);
             continue;
         }
 
