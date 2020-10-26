@@ -101,7 +101,7 @@ void *communication(void *arg)
 
     char *ready = "220 Anonymous FTP server ready.\r\n";
     m_write(connfd, ready, strlen(ready));
-    while (read(connfd, buffer, 1024) > 0)
+    while (m_read(connfd, buffer, 1024) > 0)
     {
         printf("msg:%s", buffer);
         parse_command(buffer, cmd);
@@ -155,7 +155,6 @@ void *communication(void *arg)
             else if (strcmp(cmd->command, "ABOR") == 0)
             {
                 rnfr_tag = 0;
-                printf("abor");
                 ftp_quit(cmd, connfd, &quit_tag);
                 if (quit_tag == 1)
                 {
