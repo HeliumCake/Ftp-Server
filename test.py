@@ -51,11 +51,27 @@ print(data)
 data_conn, addr = datafd.accept()
 data=data_conn.recv(1002400)
 print(data)
+data_conn.close()
+datafd.close()
 data=client.recv(1002400)
 print(data)
 
 msg="PASV\r\n"
 client.send(msg)
+data=client.recv(1002400)
+print(data)
+datas=data.split(".")
+port=int(datas[4])*256+int(datas[5])
+print(port)
+
+datafd=socket.socket()
+msg="STOR lalala22.txt\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+datafd.connect(("127.0.0.1", port))
+datafd.send("lalallllla")
+datafd.close()
 data=client.recv(1002400)
 print(data)
 

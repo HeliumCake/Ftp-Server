@@ -37,6 +37,22 @@ int m_read(int socketfd, char *msg, int len)
     return total;
 }
 
+int m_read_data(int socketfd, char *msg, int len)
+{
+    int total = 0;
+    int n;
+    while ((n = read(socketfd, msg + total, len - total)) > 0)
+    {
+        total += n;
+        printf("r:%d %d ", total, n);
+    }
+    if (n < 0)
+    {
+        return n;
+    }
+    return total;
+}
+
 int m_write(int socketfd, char *msg, int len)
 {
     int total = 0;

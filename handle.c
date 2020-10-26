@@ -22,7 +22,6 @@ void ftp_user(Command *cmd, int connfd, int *state)
 	}
 }
 
-
 void ftp_pass(Command *cmd, int connfd, int *state)
 {
 	char *reply = "230 Login successfully.\r\n";
@@ -30,8 +29,8 @@ void ftp_pass(Command *cmd, int connfd, int *state)
 	m_write(connfd, reply, strlen(reply));
 }
 
-
-void ftp_retr(Command *cmd, int connfd, int datafd, char *dir) {
+void ftp_retr(Command *cmd, int connfd, int datafd, char *dir)
+{
 	char filename[200];
 	strcpy(filename, dir);
 	strcat(filename, cmd->arg);
@@ -39,7 +38,7 @@ void ftp_retr(Command *cmd, int connfd, int datafd, char *dir) {
 	int fd = open(filename, O_RDONLY);
 	char buffer[100];
 	int size;
-	while((size = read(fd, buffer, 100)) > 0)
+	while ((size = read(fd, buffer, 100)) > 0)
 	{
 		if (m_write(datafd, buffer, size) < 0)
 		{
@@ -59,9 +58,34 @@ void ftp_retr(Command *cmd, int connfd, int datafd, char *dir) {
 	close(fd);
 }
 
-
-void ftp_stor(Command *cmd, int connfd, int datafd, char *dir) {}
-
+void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
+{
+	char filename[200];
+	strcpy(filename, dir);
+	strcat(filename, cmd->arg);
+	printf("filename:%s\n", filename);
+	int fd = open(filename, O_WRONLY | O_CREAT);
+	char buffer[100];
+	int size;
+	while ((size = m_read_data(datafd, buffer, 100)) > 0)
+	{
+		if (write(fd, buffer, size) < 0)
+		{
+			char *reply = "451 Read file error.\r\n";
+			m_write(connfd, reply, strlen(reply));
+			close(fd);
+			return;
+		}
+	}
+	if (size < 0)
+	{
+		char *reply = "426 Connection closed.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+	char *reply = "226 STOR successfully.\r\n";
+	m_write(connfd, reply, strlen(reply));
+	close(fd);
+}
 
 void ftp_quit(Command *cmd, int connfd, int *state)
 {
@@ -70,13 +94,11 @@ void ftp_quit(Command *cmd, int connfd, int *state)
 	m_write(connfd, reply, strlen(reply));
 }
 
-
 void ftp_syst(Command *cmd, int connfd)
 {
 	char *reply = "215 UNIX Type:L8\r\n";
 	m_write(connfd, reply, strlen(reply));
 }
-
 
 void ftp_type(Command *cmd, int connfd)
 {
@@ -92,7 +114,6 @@ void ftp_type(Command *cmd, int connfd)
 	}
 }
 
-
 void ftp_port(Command *cmd, int connfd, char *data_ip, int *data_port)
 {
 	int h1, h2, h3, h4, p1, p2;
@@ -102,7 +123,6 @@ void ftp_port(Command *cmd, int connfd, char *data_ip, int *data_port)
 	char *reply = "200 PORT successfully.\r\n";
 	m_write(connfd, reply, strlen(reply));
 }
-
 
 void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 {
@@ -126,23 +146,16 @@ void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 	m_write(connfd, reply, strlen(reply));
 }
 
-
 void ftp_mkd(Command *cmd, int connfd) {}
-
 
 void ftp_cwd(Command *cmd, int connfd) {}
 
-
 void ftp_pwd(Command *cmd, int connfd) {}
-
 
 void ftp_list(Command *cmd, int connfd) {}
 
-
 void ftp_rmd(Command *cmd, int connfd) {}
 
-
 void ftp_rnfr(Command *cmd, int connfd) {}
-
 
 void ftp_rnto(Command *cmd, int connfd) {}
