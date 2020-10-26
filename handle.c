@@ -161,8 +161,8 @@ void ftp_cwd(Command *cmd, int connfd, char *dir) {}
 
 void ftp_pwd(Command *cmd, int connfd, char *dir) {}
 
-void ftp_list(Command *cmd, int connfd, int datafd, char *dir) {
-	
+void ftp_list(Command *cmd, int connfd, int datafd, char *dir)
+{
 	char filename[200];
 	strcpy(filename, dir);
 	strcat(filename, "/");
@@ -174,6 +174,7 @@ void ftp_list(Command *cmd, int connfd, int datafd, char *dir) {
 	int size;
 	while ((size = fread(buffer, 100, 1, f)) > 0)
 	{
+		printf("size=%d", size);
 		if (m_write(datafd, buffer, size) < 0)
 		{
 			char *reply = "426 Connection closed.\r\n";
