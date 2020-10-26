@@ -152,6 +152,15 @@ void *communication(void *arg)
                     break;
                 }
             }
+            else if (strcmp(cmd->command, "ABOR") == 0)
+            {
+                rnfr_tag = 0;
+                ftp_quit(cmd, connfd, &quit_tag);
+                if (quit_tag == 1)
+                {
+                    break;
+                }
+            }
             else if (strcmp(cmd->command, "SYST") == 0)
             {
                 rnfr_tag = 0;
