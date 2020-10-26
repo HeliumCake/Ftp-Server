@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 void ftp_user(Command *cmd, int connfd, int *state)
 {

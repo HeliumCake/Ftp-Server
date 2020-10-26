@@ -85,6 +85,51 @@ void parse_command(char *str, Command *cmd)
     cmd->arg[p - q] = '\0';
 }
 
+int create_connect(char *ip, int port)
+{
+    int datafd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = (in_port_t)htons((uint16_t)port);
+    inet_pton(AF_INET, ip, &addr.sin_addr);
+
+    if (connect(datafd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
+    {
+        return -1;
+    }
+
+    return datafd;
+}
+
+int create_socket(char *ip, int port)
+{
+    int listenfd;
+    struct sockaddr_in addr;
+
+    if ((listenfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
+    {
+        return -1;
+    }
+
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = (in_port_t)htons((uint16_t)port);
+    inet_pton(AF_INET, ip, &addr.sin_addr);
+
+    if (bind(listenfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
+    {
+        return -1;
+    }
+
+    if (listen(listenfd, 10) == -1)
+    {
+        return -1;
+    }
+
+    return listenfd;
+}
+
 void *communication(void *arg)
 {
     int connfd = *(int *)arg;
@@ -275,51 +320,6 @@ void *communication(void *arg)
     }
     close(connfd);
     return NULL;
-}
-
-int create_connect(char *ip, int port)
-{
-    int datafd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = (in_port_t)htons((uint16_t)port);
-    inet_pton(AF_INET, ip, &addr.sin_addr);
-
-    if (connect(datafd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
-    {
-        return -1
-    }
-
-    return datafd;
-}
-
-int create_socket(char *ip, int port)
-{
-    int listenfd;
-    struct sockaddr_in addr;
-
-    if ((listenfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
-    {
-        return -1;
-    }
-
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = (in_port_t)htons((uint16_t)port);
-    inet_pton(AF_INET, ip, &addr.sin_addr);
-
-    if (bind(listenfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
-    {
-        return -1;
-    }
-
-    if (listen(listenfd, 10) == -1)
-    {
-        return -1;
-    }
-
-    return listenfd;
 }
 
 int main(int argc, char **argv)
