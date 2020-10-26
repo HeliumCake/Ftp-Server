@@ -48,6 +48,7 @@ void ftp_retr(Command *cmd, int connfd, int datafd, char *dir)
 			return;
 		}
 	}
+	close(fd);
 	if (size < 0)
 	{
 		char *reply = "451 Read file error.\r\n";
@@ -55,7 +56,6 @@ void ftp_retr(Command *cmd, int connfd, int datafd, char *dir)
 	}
 	char *reply = "226 RETR successfully.\r\n";
 	m_write(connfd, reply, strlen(reply));
-	close(fd);
 }
 
 void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
@@ -64,7 +64,7 @@ void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
 	strcpy(filename, dir);
 	strcat(filename, cmd->arg);
 	printf("filename:%s\n", filename);
-	int fd = open(filename, O_WRONLY | O_CREAT);
+	int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR);
 	char buffer[100];
 	int size;
 	while ((size = m_read_data(datafd, buffer, 100)) > 0)
@@ -81,6 +81,7 @@ void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
 			break;
 		}
 	}
+	close(fd);
 	if (size < 0)
 	{
 		char *reply = "426 Connection closed.\r\n";
@@ -88,7 +89,6 @@ void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
 	}
 	char *reply = "226 STOR successfully.\r\n";
 	m_write(connfd, reply, strlen(reply));
-	close(fd);
 }
 
 void ftp_quit(Command *cmd, int connfd, int *state)
