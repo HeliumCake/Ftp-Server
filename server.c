@@ -133,7 +133,7 @@ void *communication(void *arg)
             else if (strcmp(cmd->command, "STOR") == 0)
             {
                 rnfr_tag = 0;
-                ftp_stor(cmd, connfd, );
+                ftp_stor(cmd, connfd);
             }
             else if (strcmp(cmd->command, "QUIT") == 0)
             {
