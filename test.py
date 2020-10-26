@@ -111,7 +111,17 @@ client.send(msg)
 data=client.recv(1002400)
 print(data)
 
+msg="PWD\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
 msg="CWD ./test\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
+msg="PWD\r\n"
 client.send(msg)
 data=client.recv(1002400)
 print(data)
@@ -121,7 +131,17 @@ client.send(msg)
 data=client.recv(1002400)
 print(data)
 
+msg="PWD\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
 msg="CWD ..\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
+msg="PWD\r\n"
 client.send(msg)
 data=client.recv(1002400)
 print(data)
@@ -131,7 +151,17 @@ client.send(msg)
 data=client.recv(1002400)
 print(data)
 
+msg="PWD\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
 msg="CWD /test2\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
+msg="PWD\r\n"
 client.send(msg)
 data=client.recv(1002400)
 print(data)
