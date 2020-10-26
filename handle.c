@@ -218,6 +218,7 @@ void ftp_cwd(Command *cmd, int connfd, char *dir)
 	}
 	else
 	{
+		strcat(dir, "/");
 		strcat(dir, cmd->arg);
 	}
 	if (flag == 1 || open(dir, O_RDONLY) == -1)

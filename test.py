@@ -166,6 +166,16 @@ client.send(msg)
 data=client.recv(1002400)
 print(data)
 
+msg="CWD /test3\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
+msg="PWD\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
 msg="QUIT\r\n"
 client.send(msg)
 data=client.recv(1002400)
