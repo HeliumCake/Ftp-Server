@@ -46,12 +46,11 @@ datafd.bind(("127.0.0.1", 65534))
 datafd.listen(1)
 msg="RETR lalala.txt\r\n"
 client.send(msg)
+data=client.recv(1002400)
+print(data)
 data_conn, addr = datafd.accept()
 data=data_conn.recv(1002400)
 print(data)
-
-msg="PASV\r\n"
-client.send(msg)
 data=client.recv(1002400)
 print(data)
 
@@ -60,7 +59,7 @@ client.send(msg)
 data=client.recv(1002400)
 print(data)
 
-msg="ABOR\r\n"
+msg="PASV\r\n"
 client.send(msg)
 data=client.recv(1002400)
 print(data)

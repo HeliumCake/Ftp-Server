@@ -186,7 +186,6 @@ void *communication(void *arg)
                 char *reply = "150 About to open data connection.\r\n";
                 m_write(connfd, reply, strlen(reply));
                 int data_connfd;
-                printf("connecting...\n");
                 if (data_socket != -1 && (data_connfd = accept(data_socket, NULL, NULL)) != -1)
                 {
                     ftp_retr(cmd, connfd, data_connfd, dir);
@@ -196,9 +195,7 @@ void *communication(void *arg)
                 }
                 else if (data_port != -1 && (data_connfd = create_connect(data_ip, data_port)) != -1)
                 {
-                    printf("success\n");
                     ftp_retr(cmd, connfd, data_connfd, dir);
-                    printf("???\n");
                     close(data_connfd);
                     data_port = -1;
                 }
