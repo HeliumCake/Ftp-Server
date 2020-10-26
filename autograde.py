@@ -46,10 +46,12 @@ def test(port=21, directory='/tmp'):
   try:
     ftp = FTP()
     # connect
+    print 'connect'
     if not ftp.connect('127.0.0.1', port).startswith('220'):
       print 'You missed response 220'
       credit -= minor
     # login
+    print 'login'
     if not ftp.login().startswith('230'):
       print 'You missed response 230'
       credit -= minor
