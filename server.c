@@ -92,7 +92,7 @@ void *communication(void *arg)
     int quit_tag = 0;
     char data_ip[16];
     int data_port;
-    int data_socket;
+    int data_socket = -1;
     Command *cmd = (Command *)malloc(sizeof(Command));
 
     char *ready = "220 FTP server ready.\r\n";
@@ -216,11 +216,16 @@ void *communication(void *arg)
         memset(buffer, 0, 1024);
         memset(cmd, 0, sizeof(Command));
     }
+    if (data_socket != -1)
+    {
+        close(data_socket);
+    }
     close(connfd);
     return NULL;
 }
 
-int create_socket(char *ip, int port) {
+int create_socket(char *ip, int port)
+{
     int listenfd;
     struct sockaddr_in addr;
 
@@ -243,7 +248,7 @@ int create_socket(char *ip, int port) {
     {
         return -1;
     }
-    
+
     return listenfd;
 }
 
@@ -253,7 +258,7 @@ int main(int argc, char **argv)
     int port = 6789;
 
     int listenfd, connfd;
-    
+
     if ((listenfd = create_socket(ip, port)) == -1)
     {
         return 1;
