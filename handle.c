@@ -41,7 +41,6 @@ void ftp_retr(Command *cmd, int connfd, int datafd, char *dir)
 	int size;
 	while ((size = read(fd, buffer, 100)) > 0)
 	{
-		printf("size=%d",size);
 		if (m_write(datafd, buffer, size) < 0)
 		{
 			char *reply = "426 Connection closed.\r\n";
@@ -156,16 +155,48 @@ void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 	m_write(connfd, reply, strlen(reply));
 }
 
-void ftp_mkd(Command *cmd, int connfd) {}
+void ftp_mkd(Command *cmd, int connfd, char *dir) {}
 
-void ftp_cwd(Command *cmd, int connfd) {}
+void ftp_cwd(Command *cmd, int connfd, char *dir) {}
 
-void ftp_pwd(Command *cmd, int connfd) {}
+void ftp_pwd(Command *cmd, int connfd, char *dir) {}
 
-void ftp_list(Command *cmd, int connfd) {}
+void ftp_list(Command *cmd, int connfd, int datafd, char *dir) {
+	
+	char filename[200];
+	strcpy(filename, dir);
+	strcat(filename, "/");
+	strcat(filename, cmd->arg);
+	char name[200];
+	sprintf(name, "ls -al %s", filename);
+	FILE *f = popen(name, "r");
+	char buffer[100];
+	int size;
+	while ((size = fread(buffer, 100, 1, f)) > 0)
+	{
+		if (m_write(datafd, buffer, size) < 0)
+		{
+			char *reply = "426 Connection closed.\r\n";
+			m_write(connfd, reply, strlen(reply));
+			pclose(f);
+			return;
+		}
+	}
+	pclose(f);
+	if (size > 100)
+	{
+		char *reply = "451 Read file error.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+	else
+	{
+		char *reply = "226 LIST successfully.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+}
 
-void ftp_rmd(Command *cmd, int connfd) {}
+void ftp_rmd(Command *cmd, int connfd, char *dir) {}
 
-void ftp_rnfr(Command *cmd, int connfd) {}
+void ftp_rnfr(Command *cmd, int connfd, char *dir) {}
 
-void ftp_rnto(Command *cmd, int connfd) {}
+void ftp_rnto(Command *cmd, int connfd, char *dir) {}

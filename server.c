@@ -303,38 +303,58 @@ void *communication(void *arg)
             else if (strcmp(cmd->command, "MKD") == 0)
             {
                 rnfr_tag = 0;
-                ftp_mkd(cmd, connfd);
+                ftp_mkd(cmd, connfd, dir);
             }
             else if (strcmp(cmd->command, "CWD") == 0)
             {
                 rnfr_tag = 0;
-                ftp_cwd(cmd, connfd);
+                ftp_cwd(cmd, connfd, dir);
             }
             else if (strcmp(cmd->command, "PWD") == 0)
             {
                 rnfr_tag = 0;
-                ftp_pwd(cmd, connfd);
+                ftp_pwd(cmd, connfd, dir);
             }
             else if (strcmp(cmd->command, "LIST") == 0)
             {
                 rnfr_tag = 0;
-                ftp_list(cmd, connfd);
+                char *reply = "150 About to open data connection.\r\n";
+                m_write(connfd, reply, strlen(reply));
+                int data_connfd;
+                if (data_socket != -1 && (data_connfd = accept(data_socket, NULL, NULL)) != -1)
+                {
+                    close(data_socket);
+                    data_socket = -1;
+                    ftp_list(cmd, connfd, data_connfd, dir);
+                    close(data_connfd);
+                }
+                else if (data_port != -1 && (data_connfd = create_connect(data_ip, data_port)) != -1)
+                {
+                    data_port = -1;
+                    ftp_list(cmd, connfd, data_connfd, dir);
+                    close(data_connfd);
+                }
+                else
+                {
+                    char *reply = "425 Can't open data connection.\r\n";
+                    m_write(connfd, reply, strlen(reply));
+                }
             }
             else if (strcmp(cmd->command, "RMD") == 0)
             {
                 rnfr_tag = 0;
-                ftp_rmd(cmd, connfd);
+                ftp_rmd(cmd, connfd, dir);
             }
             else if (strcmp(cmd->command, "RNFR") == 0)
             {
                 rnfr_tag = 1;
-                ftp_rnfr(cmd, connfd);
+                ftp_rnfr(cmd, connfd, dir);
             }
             else if (strcmp(cmd->command, "RNTO") == 0)
             {
                 if (rnfr_tag == 1)
                 {
-                    ftp_rnto(cmd, connfd);
+                    ftp_rnto(cmd, connfd, dir);
                 }
                 else
                 {
