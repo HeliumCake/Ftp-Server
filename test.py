@@ -1,5 +1,6 @@
 import socket
 import time
+import re
 client=socket.socket()
 client.connect(("127.0.0.1", 6789))
 
@@ -60,9 +61,9 @@ msg="PASV\r\n"
 client.send(msg)
 data=client.recv(1002400)
 print(data)
-datas=data.split(",")
+datas=re.split(r",| ( | )", data)
 print(datas)
-port=int(datas[4])*256+int(datas[5])
+port=int(datas[5])*256+int(datas[6])
 print(port)
 
 datafd=socket.socket()
