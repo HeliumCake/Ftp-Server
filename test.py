@@ -61,7 +61,7 @@ msg="PASV\r\n"
 client.send(msg)
 data=client.recv(1002400)
 print(data)
-datas=re.split(r",| ( | )", data)
+datas=re.split(r"[,()]", data)
 print(datas)
 port=int(datas[5])*256+int(datas[6])
 print(port)
