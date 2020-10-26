@@ -21,6 +21,16 @@ client.send(msg)
 data=client.recv(1002400)
 print(data)
 
+msg="SYST\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
+msg="TYPE I\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
 msg="PASV\r\n"
 client.send(msg)
 data=client.recv(1002400)

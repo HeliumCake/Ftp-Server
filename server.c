@@ -23,12 +23,16 @@ int m_read(int socketfd, char *msg, int len)
     {
         total += n;
         printf("r:%d %d ", total, n);
+        if (msg[total - 2] == '\r' && msg[total - 1] == '\n')
+        {
+            break;
+        }
     }
     if (n < 0)
     {
         return n;
     }
-    *(msg + total) = '\0';
+    msg[total] = '\0';
     printf("rs:%s", msg);
     return total;
 }

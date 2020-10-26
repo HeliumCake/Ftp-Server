@@ -33,8 +33,23 @@ void ftp_quit(Command *cmd, int connfd, int *state)
 	*state = 1;
 	m_write(connfd, reply, strlen(reply));
 }
-void ftp_syst(Command *cmd, int connfd) {}
-void ftp_type(Command *cmd, int connfd) {}
+void ftp_syst(Command *cmd, int connfd) {
+	char *reply = "215 UNIX Type:L8\r\n";
+	m_write(connfd, reply, strlen(reply));
+}
+void ftp_type(Command *cmd, int connfd) {
+	if (strcmp(cmd->arg, "I") == 0)
+	{
+		char *reply = "200 Type set to I.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+	else
+	{
+		char *reply = "504 Type set failed.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+	
+}
 void ftp_port(Command *cmd, int connfd, char *data_ip, int *data_port) {
 	int h1,h2,h3,h4,p1,p2;
 	sscanf(cmd->arg, "%d,%d,%d,%d,%d,%d", &h1,&h2,&h3,&h4,&p1,&p2);
