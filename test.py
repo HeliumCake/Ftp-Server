@@ -101,6 +101,11 @@ datafd.close()
 data=client.recv(1002400)
 print(data)
 
+msg="MKD test2\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
 msg="QUIT\r\n"
 client.send(msg)
 data=client.recv(1002400)

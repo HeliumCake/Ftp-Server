@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 void ftp_user(Command *cmd, int connfd, int *state)
 {
@@ -35,7 +37,6 @@ void ftp_retr(Command *cmd, int connfd, int datafd, char *dir)
 	strcpy(filename, dir);
 	strcat(filename, "/");
 	strcat(filename, cmd->arg);
-	printf("filename:%s\n", filename);
 	int fd = open(filename, O_RDONLY);
 	char buffer[100];
 	int size;
@@ -68,7 +69,6 @@ void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
 	strcpy(filename, dir);
 	strcat(filename, "/");
 	strcat(filename, cmd->arg);
-	printf("filename:%s\n", filename);
 	int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
 	char buffer[100];
 	int size;
@@ -155,7 +155,22 @@ void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 	m_write(connfd, reply, strlen(reply));
 }
 
-void ftp_mkd(Command *cmd, int connfd, char *dir) {}
+void ftp_mkd(Command *cmd, int connfd, char *dir) {
+	char pathname[200];
+	strcpy(pathname, dir);
+	strcat(pathname, "/");
+	strcat(pathname, cmd->arg);
+	if(mkdir(pathname, S_IRWXU) == 0)
+	{
+		char *reply = "226 MKD successfully.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+	else
+	{
+		char *reply = "550 Fail to make dir.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+}
 
 void ftp_cwd(Command *cmd, int connfd, char *dir) {}
 
