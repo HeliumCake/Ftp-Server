@@ -155,14 +155,15 @@ void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 	m_write(connfd, reply, strlen(reply));
 }
 
-void ftp_mkd(Command *cmd, int connfd, char *dir) {
+void ftp_mkd(Command *cmd, int connfd, char *dir)
+{
 	char pathname[200];
 	strcpy(pathname, dir);
 	strcat(pathname, "/");
 	strcat(pathname, cmd->arg);
-	if(mkdir(pathname, S_IRWXU) == 0)
+	if (mkdir(pathname, S_IRWXU) == 0)
 	{
-		char *reply = "226 MKD successfully.\r\n";
+		char *reply = "250 MKD successfully.\r\n";
 		m_write(connfd, reply, strlen(reply));
 	}
 	else
@@ -172,7 +173,64 @@ void ftp_mkd(Command *cmd, int connfd, char *dir) {
 	}
 }
 
-void ftp_cwd(Command *cmd, int connfd, char *dir) {}
+void ftp_cwd(Command *cmd, int connfd, char *dir)
+{
+	int flag = 0;
+	if (cmd->arg[0] == '/')
+	{
+		strcpy(dir, root_dir);
+		strcat(dir, cmd->arg);
+	}
+	else if (cmd->arg[0] == '.')
+	{
+		if (cmd->arg[1] == '.')
+		{
+			int pos = 0;
+			for (int i = 0; dir[i] != '\0'; ++i)
+			{
+				if (dir[i] == '/')
+				{
+					pos = i;
+				}
+			}
+			if (pos < strlen(root_dir))
+			{
+				flag = 1;
+			}
+			else if (cmd->arg[2] == '/' || cmd->arg[2] == '\0')
+			{
+				dir[pos] = '\0';
+				strcat(dir, cmd->arg[1] + 2);
+			}
+			else
+			{
+				flag = 1;
+			}
+		}
+		else if (cmd->arg[1] == '/' || cmd->arg[1] == '\0')
+		{
+			strcat(dir, cmd->arg + 1);
+		}
+		else
+		{
+			flag = 1;
+		}
+	}
+	else
+	{
+		strcat(dir, cmd->arg);
+	}
+	if (flag == 1 || open(dir, O_RDONLY) == -1)
+	{
+		char *reply = "550 Fail to change dir.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+	else
+	{
+		char *reply = "250 CWD successfully.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+}
 
 void ftp_pwd(Command *cmd, int connfd, char *dir) {}
 
