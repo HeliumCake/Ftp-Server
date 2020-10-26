@@ -80,7 +80,7 @@ def test(port=21, directory='/tmp'):
 
 # Test 1
 # Test 2
-port = 1235
+port = 1234
 directory = "/tmp"
 test(port, directory)
 shutil.rmtree(directory)
