@@ -76,6 +76,10 @@ void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
 			close(fd);
 			return;
 		}
+		if (size < 100)
+		{
+			break;
+		}
 	}
 	if (size < 0)
 	{
