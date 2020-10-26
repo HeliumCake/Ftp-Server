@@ -41,6 +41,7 @@ void ftp_port(Command *cmd, int connfd, char *data_ip, int *data_port) {
 	sprintf(data_ip, "%d.%d.%d.%d",h1,h2,h3,h4);
 	*data_port = p1*256+p2;
 	char *reply = "200 PORT successfully.\r\n";
+	printf("server reply:%s", reply);
 	m_write(connfd, reply, strlen(reply));
 }
 void ftp_pasv(Command *cmd, int connfd, int *data_socket)
