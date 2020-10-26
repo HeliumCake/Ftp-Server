@@ -10,7 +10,7 @@ typedef struct Command
 
 
 int m_write(int socketfd, char* msg, int len);
-int create_socket(int port);
+int create_socket(char *ip, int port);
 
 
 #endif
