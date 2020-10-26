@@ -81,10 +81,7 @@ def test(port=21, directory='/tmp'):
 # Test 1
 # Test 2
 port = 1235
-directory = ''.join(random.choice(string.ascii_letters) for x in xrange(10))
-if os.path.isdir(directory):
-  shutil.rmtree(directory)
-os.mkdir(directory)
+directory = "/tmp"
 test(port, directory)
 shutil.rmtree(directory)
 # Clean
