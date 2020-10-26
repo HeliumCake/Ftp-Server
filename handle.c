@@ -1,6 +1,9 @@
 #include "handle.h"
 #include "server.h"
+#include <stdlib.h>
+#include <time.h>
 #include <string.h>
+#include <stdio.h>
 
 void ftp_user(Command *cmd, int connfd, int *state)
 {
@@ -33,8 +36,26 @@ void ftp_quit(Command *cmd, int connfd, int *state)
 void ftp_syst(Command *cmd, int connfd) {}
 void ftp_type(Command *cmd, int connfd) {}
 void ftp_port(Command *cmd, int connfd, char *data_ip, int *data_port) {}
-void ftp_pasv(Command *cmd, int connfd, int *data_socket) {
-	
+void ftp_pasv(Command *cmd, int connfd, int *data_socket)
+{
+	srand((unsigned)time(NULL));
+	char *ip = "127.0.0.1";
+	int port;
+	while (1)
+	{
+		port = rand() % (65536 - 20000) + 20000;
+		if ((*data_socket = create_socket(ip, port)) != -1)
+		{
+			break;
+		}
+	}
+	char reply[40];
+	int h1, h2, h3, h4, p1, p2;
+	sscanf(ip, "%d.%d.%d.%d", &h1, &h2, &h3, &h4);
+	p2 = port % 256;
+	p1 = port / 256;
+	sprintf(reply, "227 (%d,%d,%d,%d,%d,%d)\r\n", h1, h2, h3, h4, p1, p2);
+	m_write(connfd, reply, strlen(reply));
 }
 void ftp_mkd(Command *cmd, int connfd) {}
 void ftp_cwd(Command *cmd, int connfd) {}

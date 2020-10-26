@@ -220,8 +220,7 @@ void *communication(void *arg)
     return NULL;
 }
 
-int create_socket(int port) {
-    char *serverIP = "127.0.0.1";
+int create_socket(char *ip, int port) {
     int listenfd;
     struct sockaddr_in addr;
 
@@ -233,7 +232,7 @@ int create_socket(int port) {
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_port = (in_port_t)htons((uint16_t)port);
-    inet_pton(AF_INET, serverIP, &addr.sin_addr);
+    inet_pton(AF_INET, ip, &addr.sin_addr);
 
     if (bind(listenfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
     {
@@ -250,11 +249,12 @@ int create_socket(int port) {
 
 int main(int argc, char **argv)
 {
+    char *ip = "127.0.0.1";
     int port = 6789;
 
     int listenfd, connfd;
     
-    if ((listenfd = create_socket(port)) == -1)
+    if ((listenfd = create_socket(ip, port)) == -1)
     {
         return 1;
     }
