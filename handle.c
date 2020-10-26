@@ -64,7 +64,7 @@ void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
 	strcpy(filename, dir);
 	strcat(filename, cmd->arg);
 	printf("filename:%s\n", filename);
-	int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR);
+	int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
 	char buffer[100];
 	int size;
 	while ((size = m_read_data(datafd, buffer, 100)) > 0)
