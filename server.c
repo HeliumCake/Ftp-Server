@@ -133,7 +133,7 @@ int create_socket(char *ip, int port)
 void *communication(void *arg)
 {
     int connfd = *(int *)arg;
-    char *dir;
+    char dir[100];
     strcpy(dir, root_dir);
     char buffer[1024];
     memset(buffer, 0, 1024);
