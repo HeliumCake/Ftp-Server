@@ -91,7 +91,6 @@ def test(port=21, directory='/tmp'):
   except Exception as e:
     print 'Exception occurred:', e
     credit = 0
-  server.kill()
 
 # Test 1
 # Test 2
