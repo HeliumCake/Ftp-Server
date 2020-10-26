@@ -290,14 +290,15 @@ void ftp_rmd(Command *cmd, int connfd, char *dir)
 	strcpy(pathname, dir);
 	strcat(pathname, "/");
 	strcat(pathname, cmd->arg);
+	printf("%s",pathname);
 	if (rmdir(pathname) == 0)
 	{
-		char *reply = "250 MKD successfully.\r\n";
+		char *reply = "250 RMD successfully.\r\n";
 		m_write(connfd, reply, strlen(reply));
 	}
 	else
 	{
-		char *reply = "550 Fail to make dir.\r\n";
+		char *reply = "550 Fail to remove dir.\r\n";
 		m_write(connfd, reply, strlen(reply));
 	}
 }
