@@ -125,6 +125,7 @@ int create_socket(char *ip, int port)
 
     if ((listenfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
     {
+        printf("3");
         return -1;
     }
 
@@ -135,11 +136,13 @@ int create_socket(char *ip, int port)
 
     if (bind(listenfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
     {
+        printf("4");
         return -1;
     }
 
     if (listen(listenfd, 10) == -1)
     {
+        printf("5");
         return -1;
     }
 
