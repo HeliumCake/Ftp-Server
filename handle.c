@@ -102,7 +102,7 @@ void ftp_quit(Command *cmd, int connfd, int *state)
 
 void ftp_syst(Command *cmd, int connfd)
 {
-	char *reply = "215 UNIX Type:L8\r\n";
+	char *reply = "215 UNIX Type: L8\r\n";
 	m_write(connfd, reply, strlen(reply));
 }
 
