@@ -176,6 +176,8 @@ void ftp_mkd(Command *cmd, int connfd, char *dir)
 void ftp_cwd(Command *cmd, int connfd, char *dir)
 {
 	int flag = 0;
+	char backup[200];
+	strcpy(backup, dir);
 	if (cmd->arg[0] == '/')
 	{
 		strcpy(dir, root_dir);
@@ -223,6 +225,7 @@ void ftp_cwd(Command *cmd, int connfd, char *dir)
 	}
 	if (flag == 1 || open(dir, O_RDONLY) == -1)
 	{
+		strcpy(dir, backup);
 		char *reply = "550 Fail to change dir.\r\n";
 		m_write(connfd, reply, strlen(reply));
 	}
