@@ -172,7 +172,7 @@ void ftp_list(Command *cmd, int connfd, int datafd, char *dir)
 	FILE *f = popen(name, "r");
 	char buffer[100];
 	int size;
-	while ((size = fread(buffer, 100, 1, f)) > 0)
+	while ((size = fread(buffer, 1, 100, f)) > 0)
 	{
 		printf("size=%d", size);
 		if (m_write(datafd, buffer, size) < 0)
