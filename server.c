@@ -198,6 +198,7 @@ void *communication(void *arg)
                 {
                     printf("success\n");
                     ftp_retr(cmd, connfd, data_connfd, dir);
+                    printf("???\n");
                     close(data_connfd);
                     data_port = -1;
                 }
