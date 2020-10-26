@@ -158,6 +158,7 @@ void *communication(void *arg)
     char data_ip[20];
     int data_port = -1;
     int data_socket = -1;
+    char oldname[200];
     Command *cmd = (Command *)malloc(sizeof(Command));
 
     char *ready = "220 Anonymous FTP server ready.\r\n";
@@ -348,13 +349,13 @@ void *communication(void *arg)
             else if (strcmp(cmd->command, "RNFR") == 0)
             {
                 rnfr_tag = 1;
-                ftp_rnfr(cmd, connfd, dir);
+                ftp_rnfr(cmd, connfd, dir, oldname);
             }
             else if (strcmp(cmd->command, "RNTO") == 0)
             {
                 if (rnfr_tag == 1)
                 {
-                    ftp_rnto(cmd, connfd, dir);
+                    ftp_rnto(cmd, connfd, dir, oldname);
                 }
                 else
                 {

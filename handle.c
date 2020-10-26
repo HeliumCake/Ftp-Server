@@ -227,7 +227,7 @@ void ftp_cwd(Command *cmd, int connfd, char *dir)
 		strcat(dir, "/");
 		strcat(dir, cmd->arg);
 	}
-	if (flag == 1 || open(dir, O_RDONLY) == -1)
+	if (flag == 1 || access(dir, R_OK) == -1)
 	{
 		strcpy(dir, backup);
 		char *reply = "550 Fail to change dir.\r\n";
@@ -290,7 +290,7 @@ void ftp_rmd(Command *cmd, int connfd, char *dir)
 	strcpy(pathname, dir);
 	strcat(pathname, "/");
 	strcat(pathname, cmd->arg);
-	printf("%s",pathname);
+	printf("%s", pathname);
 	if (rmdir(pathname) == 0)
 	{
 		char *reply = "250 RMD successfully.\r\n";
@@ -303,6 +303,38 @@ void ftp_rmd(Command *cmd, int connfd, char *dir)
 	}
 }
 
-void ftp_rnfr(Command *cmd, int connfd, char *dir) {}
+void ftp_rnfr(Command *cmd, int connfd, char *dir, char *oldname) {
+	char filename[200];
+	strcpy(filename, dir);
+	strcat(filename, "/");
+	strcat(filename, cmd->arg);
+	strcpy(oldname, filename);
+	if (access(filename, F_OK) == 0)
+	{
+		char *reply = "350 RNFR successfully.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+	else
+	{
+		char *reply = "550 Fail to rename from.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+}
 
-void ftp_rnto(Command *cmd, int connfd, char *dir) {}
+void ftp_rnto(Command *cmd, int connfd, char *dir, char *oldname)
+{
+	char newname[200];
+	strcpy(newname, dir);
+	strcat(newname, "/");
+	strcat(newname, cmd->arg);
+	if (rename(oldname, newname) == 0)
+	{
+		char *reply = "250 RNTO successfully.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+	else
+	{
+		char *reply = "550 Fail to rename to.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+}

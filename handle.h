@@ -16,7 +16,7 @@ void ftp_cwd(Command *cmd, int connfd, char *dir);
 void ftp_pwd(Command *cmd, int connfd, char *dir);
 void ftp_list(Command *cmd, int connfd, int datafd, char *dir);
 void ftp_rmd(Command *cmd, int connfd, char *dir);
-void ftp_rnfr(Command *cmd, int connfd, char *dir);
-void ftp_rnto(Command *cmd, int connfd, char *dir);
+void ftp_rnfr(Command *cmd, int connfd, char *dir, char *oldname);
+void ftp_rnto(Command *cmd, int connfd, char *dir, char *oldname);
 
 #endif

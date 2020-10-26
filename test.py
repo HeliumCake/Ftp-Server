@@ -166,7 +166,7 @@ client.send(msg)
 data=client.recv(1002400)
 print(data)
 
-msg="CWD\r\n"
+msg="CWD /\r\n"
 client.send(msg)
 data=client.recv(1002400)
 print(data)
@@ -177,6 +177,16 @@ data=client.recv(1002400)
 print(data)
 
 msg="RMD test2\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
+msg="RNFR lalala.txt\r\n"
+client.send(msg)
+data=client.recv(1002400)
+print(data)
+
+msg="RNTO hahaha.txt\r\n"
 client.send(msg)
 data=client.recv(1002400)
 print(data)
