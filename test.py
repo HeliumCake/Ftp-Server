@@ -36,9 +36,18 @@ client.send(msg)
 data=client.recv(1002400)
 print(data)
 
-msg="PORT\r\n"
+msg="PORT 127,0,0,1,255,254\r\n"
 client.send(msg)
 data=client.recv(1002400)
+print(data)
+
+msg="RETR lalala.txt\r\n"
+client.send(msg)
+datafd=socket.socket()
+datafd.bind(("127.0.0.1", 65534))
+datafd.listen()
+datafd.accept()
+data=datafd.recv(1002400)
 print(data)
 
 msg="PASV\r\n"

@@ -88,6 +88,8 @@ void parse_command(char *str, Command *cmd)
 void *communication(void *arg)
 {
     int connfd = *(int *)arg;
+    char *dir;
+    strcpy(dir, root_dir);
     char buffer[1024];
     memset(buffer, 0, 1024);
     int username_ok = 0;
@@ -95,7 +97,7 @@ void *communication(void *arg)
     int rnfr_tag = 0;
     int quit_tag = 0;
     char data_ip[20];
-    int data_port;
+    int data_port = -1;
     int data_socket = -1;
     Command *cmd = (Command *)malloc(sizeof(Command));
 
@@ -136,12 +138,32 @@ void *communication(void *arg)
             if (strcmp(cmd->command, "RETR") == 0)
             {
                 rnfr_tag = 0;
-                ftp_retr(cmd, connfd);
+                char *reply = "150 About to open data connection.\r\n";
+                m_write(connfd, reply, strlen(reply));
+                int data_connfd;
+                printf("connecting...\n");
+                if (data_socket != -1 && (data_connfd = accept(data_socket, NULL, NULL)) != -1)
+                {
+                    ftp_retr(cmd, connfd, data_connfd, dir);
+                    close(data_connfd);
+                    close(data_socket);
+                    data_socket = -1;
+                }
+                else if (data_port != -1 && (data_connfd = create_connect(data_ip, data_port)) != -1)
+                {
+                    ftp_retr(cmd, connfd, data_connfd, dir);
+                    close(data_connfd);
+                    data_port = -1;
+                }
+                else
+                {
+                    char *reply = "425 Can't open data connection.\r\n";
+                    m_write(connfd, reply, strlen(reply));
+                }
             }
             else if (strcmp(cmd->command, "STOR") == 0)
             {
                 rnfr_tag = 0;
-                ftp_stor(cmd, connfd);
             }
             else if (strcmp(cmd->command, "QUIT") == 0)
             {
@@ -179,6 +201,10 @@ void *communication(void *arg)
                     close(data_socket);
                     data_socket = -1;
                 }
+                if (data_port != -1)
+                {
+                    data_port = -1;
+                }
                 ftp_port(cmd, connfd, data_ip, &data_port);
             }
             else if (strcmp(cmd->command, "PASV") == 0)
@@ -188,6 +214,10 @@ void *communication(void *arg)
                 {
                     close(data_socket);
                     data_socket = -1;
+                }
+                if (data_port != -1)
+                {
+                    data_port = -1;
                 }
                 ftp_pasv(cmd, connfd, &data_socket);
             }
@@ -247,6 +277,23 @@ void *communication(void *arg)
     return NULL;
 }
 
+int create_connect(char *ip, int port)
+{
+    int datafd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = (in_port_t)htons((uint16_t)port);
+    inet_pton(AF_INET, ip, &addr.sin_addr);
+
+    if (connect(datafd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
+    {
+        return -1
+    }
+
+    return datafd;
+}
+
 int create_socket(char *ip, int port)
 {
     int listenfd;
@@ -279,6 +326,7 @@ int main(int argc, char **argv)
 {
     char *ip = "127.0.0.1";
     int port = 6789;
+    strcpy(root_dir, "/tmp/");
 
     int listenfd, connfd;
 
