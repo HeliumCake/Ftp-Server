@@ -14,6 +14,7 @@ minor = 3
 major = 8
 
 def create_test_file(filename):
+  print(filename)
   f = open(filename, 'wb')
   for i in xrange(10000):
     data = struct.pack('d', random.random())
