@@ -362,7 +362,7 @@ int main(int argc, char **argv)
 {
     char *ip = "127.0.0.1";
     int port = 21;
-    strcpy(root_dir, "/tmp/");
+    strcpy(root_dir, "/tmp");
     if (argc == 3)
     {
         if (strcmp(argv[1], "-root") == 0)

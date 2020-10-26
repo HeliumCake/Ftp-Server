@@ -33,6 +33,7 @@ void ftp_retr(Command *cmd, int connfd, int datafd, char *dir)
 {
 	char filename[200];
 	strcpy(filename, dir);
+	strcat(filename, "/");
 	strcat(filename, cmd->arg);
 	printf("filename:%s\n", filename);
 	int fd = open(filename, O_RDONLY);
@@ -62,6 +63,7 @@ void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
 {
 	char filename[200];
 	strcpy(filename, dir);
+	strcat(filename, "/");
 	strcat(filename, cmd->arg);
 	printf("filename:%s\n", filename);
 	int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
