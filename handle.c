@@ -237,7 +237,7 @@ void ftp_pwd(Command *cmd, int connfd, char *dir)
 	int i = strlen(root_dir);
 	char pathname[200];
 	strcpy(pathname, dir + i);
-	char *reply[220];
+	char reply[220];
 	sprintf(reply, "257 \"%s\"\r\n", pathname);
 	m_write(connfd, reply, strlen(reply));
 }
