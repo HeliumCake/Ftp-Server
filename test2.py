@@ -102,6 +102,5 @@ os.mkdir(directory)
 test(port, directory)
 shutil.rmtree(directory)
 # Clean
-subprocess.Popen(['make', 'clean'], stdout=subprocess.PIPE)
 # Result
 print 'Your credit is %d' % credit
