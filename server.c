@@ -204,16 +204,16 @@ void *communication(void *arg)
                 int data_connfd;
                 if (data_socket != -1 && (data_connfd = accept(data_socket, NULL, NULL)) != -1)
                 {
-                    ftp_retr(cmd, connfd, data_connfd, dir);
-                    close(data_connfd);
                     close(data_socket);
                     data_socket = -1;
+                    ftp_retr(cmd, connfd, data_connfd, dir);
+                    close(data_connfd);
                 }
                 else if (data_port != -1 && (data_connfd = create_connect(data_ip, data_port)) != -1)
                 {
+                    data_port = -1;
                     ftp_retr(cmd, connfd, data_connfd, dir);
                     close(data_connfd);
-                    data_port = -1;
                 }
                 else
                 {
@@ -229,16 +229,16 @@ void *communication(void *arg)
                 int data_connfd;
                 if (data_socket != -1 && (data_connfd = accept(data_socket, NULL, NULL)) != -1)
                 {
-                    ftp_stor(cmd, connfd, data_connfd, dir);
-                    close(data_connfd);
                     close(data_socket);
                     data_socket = -1;
+                    ftp_stor(cmd, connfd, data_connfd, dir);
+                    close(data_connfd);
                 }
                 else if (data_port != -1 && (data_connfd = create_connect(data_ip, data_port)) != -1)
                 {
+                    data_port = -1;
                     ftp_stor(cmd, connfd, data_connfd, dir);
                     close(data_connfd);
-                    data_port = -1;
                 }
                 else
                 {
@@ -361,8 +361,38 @@ void *communication(void *arg)
 int main(int argc, char **argv)
 {
     char *ip = "127.0.0.1";
-    int port = 6789;
+    int port = 21;
     strcpy(root_dir, "/tmp/");
+    if (argc == 3)
+    {
+        if (strcmp(argv[1], "-root") == 0)
+        {
+            strcpy(root_dir, argv[2]);
+        }
+        else if (strcmp(argv[1], "-port") == 0)
+        {
+            sscanf(argv[2], "%d", &port);
+        }
+    }
+    else if (argc == 5)
+    {
+        if (strcmp(argv[1], "-root") == 0)
+        {
+            strcpy(root_dir, argv[2]);
+        }
+        else if (strcmp(argv[1], "-port") == 0)
+        {
+            sscanf(argv[2], "%d", &port);
+        }
+        if (strcmp(argv[3], "-root") == 0)
+        {
+            strcpy(root_dir, argv[4]);
+        }
+        else if (strcmp(argv[3], "-port") == 0)
+        {
+            sscanf(argv[4], "%d", &port);
+        }
+    }
 
     int listenfd, connfd;
 
