@@ -35,6 +35,7 @@ void ftp_retr(Command *cmd, int connfd, int datafd, char *dir) {
 	char filename[200];
 	strcpy(filename, dir);
 	strcat(filename, cmd->arg);
+	printf("filename:%s\n", filename);
 	int fd = open(filename, O_RDONLY);
 	char buffer[100];
 	int size;

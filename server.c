@@ -196,6 +196,7 @@ void *communication(void *arg)
                 }
                 else if (data_port != -1 && (data_connfd = create_connect(data_ip, data_port)) != -1)
                 {
+                    printf("success\n");
                     ftp_retr(cmd, connfd, data_connfd, dir);
                     close(data_connfd);
                     data_port = -1;
