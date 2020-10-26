@@ -56,7 +56,7 @@ void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 			break;
 		}
 	}
-	char reply[40];
+	char reply[64];
 	int h1, h2, h3, h4, p1, p2;
 	sscanf(ip, "%d.%d.%d.%d", &h1, &h2, &h3, &h4);
 	p2 = port % 256;
