@@ -125,7 +125,7 @@ void *communication(void *arg)
         }
         else
         {
-            else if (strcmp(cmd->command, "RETR") == 0)
+            if (strcmp(cmd->command, "RETR") == 0)
             {
                 rnfr_tag = 0;
                 ftp_retr(cmd, connfd);
@@ -135,7 +135,7 @@ void *communication(void *arg)
                 rnfr_tag = 0;
                 ftp_stor(cmd, connfd, );
             }
-            if (strcmp(cmd->command, "QUIT") == 0)
+            else if (strcmp(cmd->command, "QUIT") == 0)
             {
                 rnfr_tag = 0;
                 ftp_quit(cmd, connfd, &quit_tag);
