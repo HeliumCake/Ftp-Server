@@ -81,7 +81,6 @@ def test(port=21, directory='/tmp'):
 port = 12345
 directory = "/tmp"
 test(port, directory)
-shutil.rmtree(directory)
 # Clean
 # Result
 print 'Your credit is %d' % credit
