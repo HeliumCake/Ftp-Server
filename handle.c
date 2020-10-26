@@ -41,6 +41,7 @@ void ftp_retr(Command *cmd, int connfd, int datafd, char *dir)
 	int size;
 	while ((size = read(fd, buffer, 100)) > 0)
 	{
+		printf("size=%d",size);
 		if (m_write(datafd, buffer, size) < 0)
 		{
 			char *reply = "426 Connection closed.\r\n";
