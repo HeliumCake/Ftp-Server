@@ -6,7 +6,7 @@ void ftp_user(Command *cmd, int connfd, int *state);
 void ftp_pass(Command *cmd, int connfd, int *state);
 void ftp_retr(Command *cmd, int connfd);
 void ftp_stor(Command *cmd, int connfd);
-void ftp_quit(Command *cmd, int connfd);
+void ftp_quit(Command *cmd, int connfd, int *state);
 void ftp_syst(Command *cmd, int connfd);
 void ftp_type(Command *cmd, int connfd);
 void ftp_port(Command *cmd, int connfd);

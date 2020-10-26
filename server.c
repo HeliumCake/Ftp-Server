@@ -88,6 +88,7 @@ void *communication(void *arg)
     int username_ok = 0;
     int logged_in = 0;
     int rnfr_tag = 0;
+    int quit_tag = 0;
     Command *cmd = (Command *)malloc(sizeof(Command));
 
     char *ready = "220 FTP server ready.\r\n";
@@ -104,7 +105,6 @@ void *communication(void *arg)
         }
         else if (strcmp(cmd->command, "PASS") == 0)
         {
-            printf("2");
             rnfr_tag = 0;
             if (username_ok == 0)
             {
@@ -125,10 +125,24 @@ void *communication(void *arg)
         }
         else
         {
+            else if (strcmp(cmd->command, "RETR") == 0)
+            {
+                rnfr_tag = 0;
+                ftp_retr(cmd, connfd);
+            }
+            else if (strcmp(cmd->command, "STOR") == 0)
+            {
+                rnfr_tag = 0;
+                ftp_stor(cmd, connfd, );
+            }
             if (strcmp(cmd->command, "QUIT") == 0)
             {
                 rnfr_tag = 0;
-                ftp_quit(cmd, connfd);
+                ftp_quit(cmd, connfd, &quit_tag);
+                if (quit_tag == 1)
+                {
+                    break;
+                }
             }
             else if (strcmp(cmd->command, "SYST") == 0)
             {
@@ -149,16 +163,6 @@ void *communication(void *arg)
             {
                 rnfr_tag = 0;
                 ftp_pasv(cmd, connfd);
-            }
-            else if (strcmp(cmd->command, "RETR") == 0)
-            {
-                rnfr_tag = 0;
-                ftp_retr(cmd, connfd);
-            }
-            else if (strcmp(cmd->command, "STOR") == 0)
-            {
-                rnfr_tag = 0;
-                ftp_stor(cmd, connfd);
             }
             else if (strcmp(cmd->command, "MKD") == 0)
             {

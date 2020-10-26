@@ -7,27 +7,29 @@ void ftp_user(Command *cmd, int connfd, int *state)
 	if (strcmp(cmd->arg, "anonymous") == 0)
 	{
 		char *reply = "331 Please PASS.\r\n";
-		int len = strlen(reply);
 		*state = 1;
-		m_write(connfd, reply, len);
+		m_write(connfd, reply, strlen(reply));
 	}
 	else
 	{
 		char *reply = "530 Acessess denied.\r\n";
-		int len = strlen(reply);
-		m_write(connfd, reply, len);
+		m_write(connfd, reply, strlen(reply));
 	}
 }
 void ftp_pass(Command *cmd, int connfd, int *state)
 {
 	char *reply = "230 Login successfully.\r\n";
-	int len = strlen(reply);
 	*state = 1;
-	m_write(connfd, reply, len);
+	m_write(connfd, reply, strlen(reply));
 }
 void ftp_retr(Command *cmd, int connfd) {}
 void ftp_stor(Command *cmd, int connfd) {}
-void ftp_quit(Command *cmd, int connfd) {}
+void ftp_quit(Command *cmd, int connfd, int *state)
+{
+	char *reply = "221 Quit successfully.\r\n";
+	*state = 1;
+	m_write(connfd, reply, strlen(reply));
+}
 void ftp_syst(Command *cmd, int connfd) {}
 void ftp_type(Command *cmd, int connfd) {}
 void ftp_port(Command *cmd, int connfd) {}
