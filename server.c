@@ -155,6 +155,7 @@ void *communication(void *arg)
             else if (strcmp(cmd->command, "ABOR") == 0)
             {
                 rnfr_tag = 0;
+                printf("abor");
                 ftp_quit(cmd, connfd, &quit_tag);
                 if (quit_tag == 1)
                 {
