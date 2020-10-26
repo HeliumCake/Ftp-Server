@@ -2,7 +2,6 @@
 #define HANDLE_H
 #include "server.h"
 
-
 void ftp_user(Command *cmd, int connfd, int *state);
 void ftp_pass(Command *cmd, int connfd, int *state);
 void ftp_retr(Command *cmd, int connfd);
