@@ -22,7 +22,6 @@ int m_read(int socketfd, char *msg, int len)
     while ((n = read(socketfd, msg + total, len - total)) > 0)
     {
         total += n;
-        printf("r:%d %d ", total, n);
         if (msg[total - 2] == '\r' && msg[total - 1] == '\n')
         {
             break;
@@ -33,7 +32,6 @@ int m_read(int socketfd, char *msg, int len)
         return n;
     }
     msg[total] = '\0';
-    printf("rs:%s", msg);
     return total;
 }
 
@@ -44,7 +42,6 @@ int m_read_data(int socketfd, char *msg, int len)
     while ((n = read(socketfd, msg + total, len - total)) > 0)
     {
         total += n;
-        printf("r:%d %d ", total, n);
     }
     if (n < 0)
     {
@@ -60,13 +57,11 @@ int m_write(int socketfd, char *msg, int len)
     while ((n = write(socketfd, msg + total, len - total)) > 0)
     {
         total += n;
-        printf("w:%d %d ", total, n);
     }
     if (n < 0)
     {
         return n;
     }
-    printf("ws:%s", msg);
     return total;
 }
 
