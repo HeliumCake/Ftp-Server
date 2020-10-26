@@ -218,6 +218,10 @@ void ftp_cwd(Command *cmd, int connfd, char *dir)
 			flag = 1;
 		}
 	}
+	else if (cmd->arg[0] == '\0')
+	{
+		strcpy(dir, root_dir);
+	}
 	else
 	{
 		strcat(dir, "/");
@@ -280,7 +284,23 @@ void ftp_list(Command *cmd, int connfd, int datafd, char *dir)
 	}
 }
 
-void ftp_rmd(Command *cmd, int connfd, char *dir) {}
+void ftp_rmd(Command *cmd, int connfd, char *dir)
+{
+	char pathname[200];
+	strcpy(pathname, dir);
+	strcat(pathname, "/");
+	strcat(pathname, cmd->arg);
+	if (rmdir(pathname) == 0)
+	{
+		char *reply = "250 MKD successfully.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+	else
+	{
+		char *reply = "550 Fail to make dir.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
+}
 
 void ftp_rnfr(Command *cmd, int connfd, char *dir) {}
 
