@@ -175,10 +175,9 @@ void ftp_list(Command *cmd, int connfd, int datafd, char *dir)
 	while ((size = fread(buffer, 1, 100, f)) > 0)
 	{
 		printf("size=%d", size);
-		int a;
-		if ((a=m_write(datafd, buffer, size)) < 0)
+		if (m_write(datafd, buffer, size) < 0)
 		{
-			printf("write=%d", a);
+			printf("1");
 			char *reply = "426 Connection closed.\r\n";
 			m_write(connfd, reply, strlen(reply));
 			pclose(f);
