@@ -396,9 +396,10 @@ int main(int argc, char **argv)
 
     int listenfd, connfd;
 
-    pirntf("%d %s\n", port, ip);
+    printf("%d %s\n", port, ip);
     if ((listenfd = create_socket(ip, port)) == -1)
     {
+        printf("1");
         return 1;
     }
 
