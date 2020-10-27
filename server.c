@@ -120,7 +120,6 @@ int create_socket(char *ip, int port)
 
     if ((listenfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
     {
-        printf("3");
         return -1;
     }
 
@@ -131,13 +130,11 @@ int create_socket(char *ip, int port)
 
     if (bind(listenfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
     {
-        printf("4");
         return -1;
     }
 
     if (listen(listenfd, 10) == -1)
     {
-        printf("5");
         return -1;
     }
 
@@ -147,11 +144,11 @@ int create_socket(char *ip, int port)
 void *communication(void *arg)
 {
     int connfd = *(int *)arg;
-	struct sockaddr_in local;
-	socklen_t local_len = sizeof(local);
-	getsockname(connfd, (struct sockaddr*)&local, &local_len);
-	char *ip = inet_ntoa(local.sin_addr);
-	printf("ip:%s\n", ip);
+    struct sockaddr_in local;
+    socklen_t local_len = sizeof(local);
+    getsockname(connfd, (struct sockaddr *)&local, &local_len);
+    char *ip = inet_ntoa(local.sin_addr);
+    printf("ip:%s\n", ip);
     char dir[200];
     strcpy(dir, root_dir);
     char buffer[1024];
@@ -170,9 +167,7 @@ void *communication(void *arg)
     m_write(connfd, ready, strlen(ready));
     while (m_read(connfd, buffer, 1024) > 0)
     {
-        printf("msg:%s", buffer);
         parse_command(buffer, cmd);
-        printf("command:%s\narg:%s\n", cmd->command, cmd->arg);
         if (strcmp(cmd->command, "USER") == 0)
         {
             rnfr_tag = 0;
@@ -420,10 +415,8 @@ int main(int argc, char **argv)
 
     int listenfd, connfd;
 
-    printf("%d %s\n", port, ip);
     if ((listenfd = create_socket(ip, port)) == -1)
     {
-        printf("1");
         return 1;
     }
 

@@ -140,13 +140,12 @@ void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 	srand((unsigned)time(NULL));
 	struct sockaddr_in local;
 	socklen_t local_len = sizeof(local);
-	if (getsockname(connfd, (struct sockaddr*)&local, &local_len) == -1)
+	if (getsockname(connfd, (struct sockaddr *)&local, &local_len) == -1)
 	{
 		char *reply = "425 Fail Entering Passive Mode.\r\n";
 		m_write(connfd, reply, strlen(reply));
 	}
 	char *ip = inet_ntoa(local.sin_addr);
-	printf("PORT ip:%s\n", ip);
 	int port;
 	while (1)
 	{
@@ -193,7 +192,7 @@ void ftp_cwd(Command *cmd, int connfd, char *dir)
 		strcpy(dir, root_dir);
 		if (cmd->arg[1] != '\0')
 		{
-		strcat(dir, cmd->arg);
+			strcat(dir, cmd->arg);
 		}
 	}
 	else if (cmd->arg[0] == '.')
@@ -258,8 +257,6 @@ void ftp_pwd(Command *cmd, int connfd, char *dir)
 	{
 		strcpy(pathname, "/");
 	}
-	printf("pathname:%s\n", pathname);
-	printf("dir:%s\n", dir);
 	char reply[220];
 	sprintf(reply, "257 \"%s\"\r\n", pathname);
 	m_write(connfd, reply, strlen(reply));
@@ -305,7 +302,6 @@ void ftp_rmd(Command *cmd, int connfd, char *dir)
 	strcpy(pathname, dir);
 	strcat(pathname, "/");
 	strcat(pathname, cmd->arg);
-	printf("%s", pathname);
 	if (rmdir(pathname) == 0)
 	{
 		char *reply = "250 RMD successfully.\r\n";
