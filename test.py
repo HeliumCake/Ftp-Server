@@ -166,7 +166,7 @@ client.send(msg)
 data=client.recv(1002400)
 print(data)
 
-msg="CWD /\r\n"
+msg="CWD \r\n"
 client.send(msg)
 data=client.recv(1002400)
 print(data)
