@@ -136,7 +136,11 @@ void ftp_port(Command *cmd, int connfd, char *data_ip, int *data_port)
 void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 {
 	srand((unsigned)time(NULL));
-	char *ip = "127.0.0.1";
+	struct sockaddr_in local;
+	socklen_t local_len = sizeof(local);
+	getsockname(connfd, (struct sockaddr*)&local, &local_len);
+	char *ip = inet_ntoa(local.sin_addr);
+	printf("PORT ip:%s\n", ip);
 	int port;
 	while (1)
 	{
@@ -195,11 +199,7 @@ void ftp_cwd(Command *cmd, int connfd, char *dir)
 					pos = i;
 				}
 			}
-			if (pos < strlen(root_dir))
-			{
-				flag = 1;
-			}
-			else if (cmd->arg[2] == '/' || cmd->arg[2] == '\0')
+			if (pos >= strlen(root_dir) && (cmd->arg[2] == '/' || cmd->arg[2] == '\0'))
 			{
 				dir[pos] = '\0';
 				strcat(dir, cmd->arg + 2);
@@ -244,9 +244,13 @@ void ftp_pwd(Command *cmd, int connfd, char *dir)
 {
 	int i = strlen(root_dir);
 	char pathname[200];
+	strcpy(pathname, dir + i);
+	if (strlen(pathname) == 0)
+	{
+		strcpy(pathname, "/");
+	}
 	printf("pathname:%s\n", pathname);
 	printf("dir:%s\n", dir);
-	strcpy(pathname, dir + i);
 	char reply[220];
 	sprintf(reply, "257 \"%s\"\r\n", pathname);
 	m_write(connfd, reply, strlen(reply));
