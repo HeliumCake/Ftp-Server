@@ -2,7 +2,7 @@ import socket
 import time
 import re
 client=socket.socket()
-client.connect(("127.0.0.1", 1235))
+client.connect(("192.168.108.128", 1235))
 
 data=client.recv(1002400)
 print(data)
