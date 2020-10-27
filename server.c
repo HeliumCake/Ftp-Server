@@ -127,9 +127,11 @@ int create_socket(char *ip, int port)
     addr.sin_family = AF_INET;
     addr.sin_port = (in_port_t)htons((uint16_t)port);
     inet_pton(AF_INET, ip, &addr.sin_addr);
+    printf("%d\n", addr.sin_addr);
 
     if (bind(listenfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
     {
+        printf("-1");
         return -1;
     }
 
