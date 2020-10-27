@@ -190,12 +190,11 @@ void ftp_cwd(Command *cmd, int connfd, char *dir)
 	strcpy(backup, dir);
 	if (cmd->arg[0] == '/')
 	{
-		printf("root_dir:%s\n",root_dir);
-		printf("dir:%s\n", dir);
 		strcpy(dir, root_dir);
-		printf("dir:%s\n", dir);
+		if (cmd->arg[1] != '\0')
+		{
 		strcat(dir, cmd->arg);
-		printf("dir:%s\n", dir);
+		}
 	}
 	else if (cmd->arg[0] == '.')
 	{
