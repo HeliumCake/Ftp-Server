@@ -144,11 +144,6 @@ int create_socket(char *ip, int port)
 void *communication(void *arg)
 {
     int connfd = *(int *)arg;
-    struct sockaddr_in local;
-    socklen_t local_len = sizeof(local);
-    getsockname(connfd, (struct sockaddr *)&local, &local_len);
-    char *ip = inet_ntoa(local.sin_addr);
-    printf("ip:%s\n", ip);
     char dir[200];
     strcpy(dir, root_dir);
     char buffer[1024];
