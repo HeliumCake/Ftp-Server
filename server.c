@@ -379,7 +379,7 @@ void *communication(void *arg)
 
 int main(int argc, char **argv)
 {
-    char *ip = "127.0.0.1";
+    char *ip = "0.0.0.0";
     int port = 21;
     strcpy(root_dir, "/tmp");
     if (argc == 3)
