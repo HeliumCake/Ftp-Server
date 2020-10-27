@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/socket.h>
 
 void ftp_user(Command *cmd, int connfd, int *state)
 {
@@ -138,7 +139,11 @@ void ftp_pasv(Command *cmd, int connfd, int *data_socket)
 	srand((unsigned)time(NULL));
 	struct sockaddr_in local;
 	socklen_t local_len = sizeof(local);
-	getsockname(connfd, (struct sockaddr*)&local, &local_len);
+	if (getsockname(connfd, (struct sockaddr*)&local, &local_len) == -1)
+	{
+		char *reply = "425 Fail Entering Passive Mode.\r\n";
+		m_write(connfd, reply, strlen(reply));
+	}
 	char *ip = inet_ntoa(local.sin_addr);
 	printf("PORT ip:%s\n", ip);
 	int port;
