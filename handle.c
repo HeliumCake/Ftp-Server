@@ -264,11 +264,11 @@ void ftp_pwd(Command *cmd, int connfd, char *dir)
 
 void ftp_list(Command *cmd, int connfd, int datafd, char *dir)
 {
-	char filename[210];
+	char filename[200];
 	strcpy(filename, dir);
 	strcat(filename, "/");
 	strcat(filename, cmd->arg);
-	char name[220];
+	char name[210];
 	sprintf(name, "ls -al %s", filename);
 	FILE *f = popen(name, "r");
 	char buffer[100];
