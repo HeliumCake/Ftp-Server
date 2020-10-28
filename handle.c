@@ -78,7 +78,7 @@ void ftp_stor(Command *cmd, int connfd, int datafd, char *dir)
 	{
 		if (write(fd, buffer, size) < 0)
 		{
-			char *reply = "451 Read file error.\r\n";
+			char *reply = "451 Write file error.\r\n";
 			m_write(connfd, reply, strlen(reply));
 			close(fd);
 			return;
@@ -286,7 +286,7 @@ void ftp_list(Command *cmd, int connfd, int datafd, char *dir)
 	pclose(f);
 	if (size > 100)
 	{
-		char *reply = "451 Read file error.\r\n";
+		char *reply = "451 List file error.\r\n";
 		m_write(connfd, reply, strlen(reply));
 	}
 	else
