@@ -269,7 +269,7 @@ void ftp_list(Command *cmd, int connfd, int datafd, char *dir)
 	strcat(filename, "/");
 	strcat(filename, cmd->arg);
 	char name[210];
-	sprintf(name, "ls -alF %s", filename);
+	sprintf(name, "ls -al %s", filename);
 	FILE *f = popen(name, "r");
 	char buffer[100];
 	int size;
